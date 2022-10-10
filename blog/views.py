@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from blog.models import Post
+from django.contrib.auth.models import User
 """def home(request):
     return HttpResponse('<h1>Blog Home </h1>')
 """
@@ -30,13 +31,21 @@ posts = [
 
 
 def home(request):
+    posts = Post.objects.all()
+    for post in posts:
+        user = post.author
+        user.username = 'Aridon'
+        post.author = user
+        
     context = {
         'posts': posts
     }
     return render(request, 'blog/home.html', context=context)
 
 def about(request):
-    return render(request, 'blog/about.html', context= {'title' : 'Author'})
+    post = Post.objects.get(id=1)
+    username = post.author.username
+    return render(request, 'blog/about.html', context= {'username' : username})
 
 def article(request):
 
